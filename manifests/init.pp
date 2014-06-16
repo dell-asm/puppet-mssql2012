@@ -9,41 +9,24 @@
 class mssql2012 (
 # See http://msdn.microsoft.com/en-us/library/ms144259.aspx
   # Media is required to install
-  $media = 'D:\\',
-  $instancename   = $mssql2012::params::instancename,
-  $features       = $mssql2012::params::features,
-  $sapwd  = $mssql2012::params::sapwd,
-  $agtsvcaccount  = $mssql2012::params::agtsvcaccount,
-  $agtsvcpassword = $mssql2012::params::agtsvcpassword,
-  $assvcaccount   = $mssql2012::params::assvcaccount,
-  $assvcpassword  = $mssql2012::params::assvcpassword,
-  $rssvcaccount   = $mssql2012::params::rssvcaccount,
-  $rssvcpassword  = $mssql2012::params::rssvcpassword,
-  $sqlsvcaccount  = $mssql2012::params::sqlsvcaccount,
-  $sqlsvcpassword = $mssql2012::params::sqlsvcpassword,
-  $instancedir    = $mssql2012::params::instancedir,
-  $ascollation    = $mssql2012::params::ascollation,
-  $sqlcollation   = $mssql2012::params::sqlcollation,
-  $admin          = $mssql2012::params::admin,
-) inherits mssql2012::params {
-
-  # validation
-  validate_string($media)
-  validate_string($instancename)
-  validate_string($features)
-  validate_string($sapwd)
-  validate_string($agtsvcaccount)
-  validate_string($agtsvcpassword)
-  validate_string($assvcaccount)
-  validate_string($assvcpassword)
-  validate_string($rssvcaccount)
-  validate_string($rssvcpassword)
-  validate_string($sqlsvcaccount)
-  validate_string($sqlsvcpassword)
-  validate_string($instancedir)
-  validate_string($ascollation)
-  validate_string($sqlcollation)
-  validate_string($admin)
+  $media          = '\\dellasm\razor\SQLServer2012',
+  $instancename   = 'MSSQLSERVER',
+  $features       = 'SQLENGINE,CONN,SSMS,ADV_SSMS',
+  $sapwd          = 'Sql!@as#2012demo',
+  $agtsvcaccount  = 'SQLAGTSVC',
+  $agtsvcpassword = 'Sql!@gt#2012demo',
+  $assvcaccount   = 'SQLASSVC',
+  $assvcpassword  = 'Sql!@s#2012demo',
+  $rssvcaccount   = 'SQLRSSVC',
+  $rssvcpassword  = 'Sql!Rs#2012demo',
+  $sqlsvcaccount  = 'SQLSVC',
+  $sqlsvcpassword = 'Sql!#2012demo',
+  $instancedir    = 'C:\Program Files\Microsoft SQL Server\\',
+  $ascollation    = 'Latin1_General_CI_AS',
+  $sqlcollation   = 'SQL_Latin1_General_CP1_CI_AS',
+  $admin          = 'Administrator',
+  $netfxsource    = '\\dellasm\razor\windows_install\sources\sxs'
+)  {
 
   User {
     ensure   => present,
@@ -73,7 +56,9 @@ class mssql2012 (
   }
 
   dism { 'NetFx3':
-    ensure => present,
+    ensure           => present,
+    source           => $netfxsource,
+    all_dependencies => 1
   }
 
   exec { 'install_mssql2012':
