@@ -67,7 +67,7 @@ class mssql2012 (
     path      => $media,
     logoutput => true,
     creates   => $instancedir,
-    timeout   => 1200,
+    timeout   => 3000,
     require   => [ File['C:\sql2012install.ini'],
                    Dism['NetFx3'] ],
   }
