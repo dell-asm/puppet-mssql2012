@@ -241,7 +241,7 @@
 				"type": "STRING",
 				"displayName": "instancedir",
 				"id": "instancedir",
-				"value": "C:\\Program Files\\Microsoft SQL Server\\\\",
+				"value": "C:\\Program Files\\Microsoft SQL Server",
 				"required": false,
 				"requiredAtDeployment": false,
 				"hideFromTemplate": false,
