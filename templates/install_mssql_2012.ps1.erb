@@ -1,0 +1,28 @@
+# Powershell script template for installing MSSQL 2012
+
+$sa_token     = '<%= @sapwd.gsub("'", "''") %>'
+$sqlsvc_token = '<%= @sqlsvcpassword.gsub("'", "''") %>'
+$agtsvc_token = '<%= @agtsvcpassword.gsub("'", "''") %>'
+$assvc_token  = '<%= @assvcpassword.gsub("'", "''") %>'
+$rssvc_token  = '<%= @rssvcpassword.gsub("'", "''") %>'
+$media        = '<%= @media.gsub("'", "''") %>'
+
+# Get our cert name for use in HTTP GET to fetch decrypted password
+$cert_name = &"puppet.bat" config print node_name_value
+
+Function GetPass( [String]$password ) {
+  $pass = $password
+  if ( $password -match "ASMTOKEN") {
+    $uri = "http://dellasm:8080/asm/secret/tokencred/${cert_name}?token_key=${password}"
+    $pass = Invoke-RestMethod -URI $uri -Method Get
+  }
+  return $pass
+}
+
+$sapwd          = GetPass($sa_token)
+$sqlsvcpassword = GetPass($sqlsvc_token)
+$agtsvcpassword = GetPass($agtsvc_token)
+$assvcpassword  = GetPass($assvc_token)
+$rssvcpassword  = GetPass($rssvc_token)
+
+&"${media}\setup.exe" /Action=Install /IACCEPTSQLSERVERLICENSETERMS /Q /HIDECONSOLE /CONFIGURATIONFILE=C:\\sql2012install.ini /SAPWD=$sapwd /SQLSVCPASSWORD=$sqlsvcpassword /AGTSVCPASSWORD=$agtsvcpassword /ASSVCPASSWORD=$assvcpassword /RSSVCPASSWORD=$rssvcpassword
